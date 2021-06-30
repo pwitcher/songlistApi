@@ -1,0 +1,223 @@
+openapi: "3.0.0"
+
+info:
+  version: "0.1 Alpha"
+  title: Songbook API
+  description: "A web API of songs in a musician's songbook. You can GET the entire list, or filter the list for one or more songs based on title, artist, genre, or decade."
+  contact:
+    name: Pete Witcher
+    email: pete.witcher@gmail.com
+
+servers:
+  - url: http:127.0.0.1:5000/api/v1/resources/songs
+    description: Local test server
+
+paths:
+  /all:
+    get:
+      summary: "Get a list of all songs."
+      description: "Get a list of all the songs in the database."
+      operationId: api_all
+      responses:
+        200:
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/all'
+  /title:
+    get:
+      summary: "Find a single song by its title."
+      description: "Search for a single song by its title."
+      operationId: api_title
+      parameters:
+        - name: title
+          in: query
+          description: Title of the song
+          required: false
+          explode: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/title'
+  /artist:
+    get:
+      summary: "Get a list of songs by one artist."
+      description: "Filter songs by artist."
+      operationId: api_artist
+      parameters:
+        - name: artist
+          in: query
+          description: Name of the artist
+          required: false
+          explode: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/artist'
+  /genre:
+    get:
+      summary: "Get songs in the same genre."
+      description: "Filter songs by genre."
+      operationId: api_genre
+      parameters:
+        - name: genre
+          in: query
+          description: Songs in the same genre
+          required: false
+          explode: true
+          schema:
+            type: string
+            enum:
+              - Pop
+              - Folk
+              - Country
+              - Classic Rock
+            default: Country
+      responses:
+        200:
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genre'
+  /decade:
+    get:
+      summary: "Get a list of songs from the same decade."
+      description: "Filter songs by decade."
+      operationId: api_decade
+      parameters:
+        - name: decade
+          in: query
+          description: Songs from the same decade
+          required: false
+          explode: true
+          schema:
+            type: string
+            enum:
+              - 70s
+              - 80s
+              - 90s
+              - 2000s
+            default: 70s
+      responses:
+        200:
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/decade'
+components:
+  schemas:
+    all:
+      title: Response
+      type: object
+      properties:
+        results:
+          type: object
+          properties:
+            title:
+              type: string
+              description: title of song
+              example: 'Spooky'
+            artist:
+              type: string
+              description: name of artist
+              example: 'Atlanta Rhythm Section'
+            genre:
+              type: string
+              description: genre of song
+              example: 'Classic Rock'
+            decade:
+              type: string
+              description: decade the song was released
+              example: '70s'
+        status:
+          type: string
+          description: "Three possible statuses:\n
+            \n* `OK`: No errors occurred.
+            \n* `INVALID_REQUEST`: One or more parameters are missing or invalid.
+            \n* `UNKNOWN_ERROR`: The request could not be processed due to a server error. The request may succeed if you try again."
+          example: "OK"
+    title:
+      title: Response
+      type: object
+      properties:
+        results:
+          type: object
+          properties:
+            title:
+              type: string
+              description: title of song
+              example: 'Spooky'
+        status:
+          type: string
+          description: "Three possible statuses:\n
+            \n* `OK`: No errors occurred.
+            \n* `INVALID_REQUEST`: One or more parameters are missing or invalid.
+            \n* `UNKNOWN_ERROR`: The request could not be processed due to a server error. The request may succeed if you try again."
+          example: "OK"
+    artist:
+      title: Response
+      type: object
+      properties:
+        results:
+          type: object
+          properties:
+            artist:
+              type: string
+              description: name of artist
+              example: 'Atlanta Rhythm Section'
+        status:
+          type: string
+          description: "Three possible statuses:\n
+            \n* `OK`: No errors occurred.
+            \n* `INVALID_REQUEST`: One or more parameters are missing or invalid.
+            \n* `UNKNOWN_ERROR`: The request could not be processed due to a server error. The request may succeed if you try again."
+          example: "OK"
+    genre:
+      title: Response
+      type: object
+      properties:
+        results:
+          type: object
+          properties:
+            genre:
+              type: string
+              description: genre of song
+              example: 'Classic Rock'
+        status:
+          type: string
+          description: "Three possible statuses:\n
+            \n* `OK`: No errors occurred.
+            \n* `INVALID_REQUEST`: One or more parameters are missing or invalid.
+            \n* `UNKNOWN_ERROR`: The request could not be processed due to a server error. The request may succeed if you try again."
+          example: "OK"
+    decade:
+      title: Response
+      type: object
+      properties:
+        results:
+          type: object
+          properties:
+            genre:
+              type: string
+              description: decade when the song was released
+              example: '70s'
+        status:
+          type: string
+          description: "Three possible statuses:\n
+            \n* `OK`: No errors occurred.
+            \n* `INVALID_REQUEST`: One or more parameters are missing or invalid.
+            \n* `UNKNOWN_ERROR`: The request could not be processed due to a server error. The request may succeed if you try again."
+          example: "OK"
