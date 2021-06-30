@@ -1,1 +1,1 @@
-web: gunicorn songApiDb:app
+web: gunicorn --bind 0.0.0.0:$PORT songApiDb:app
