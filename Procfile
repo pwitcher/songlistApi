@@ -1,1 +1,1 @@
-web: gunicorn songApiDb:app
+web: gunicorn songApiDb.py
