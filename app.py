@@ -3,7 +3,6 @@ from flask import request, jsonify
 import sqlite3
 
 app = flask.Flask(__name__)
-app.config["DEBUG"] = True
 
 def dict_factory(cursor, row):
     d = {}
@@ -130,4 +129,6 @@ def api_decade():
 
     return jsonify(results)
 
-app.run()
+if __name__ == "__main__":
+    app.config["DEBUG"] = True
+    app.run()
