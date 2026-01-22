@@ -15,19 +15,21 @@ servers:
 paths:
   /all:
     get:
-      summary: "Get a list of all songs."
+      summary: "Get a list of all songs"
       description: "Get a list of all the songs in the database."
       operationId: api_all
       responses:
-        200:
+        "200":
           description: Successful response
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/all'
+                $ref: '#/components/schemas/AllResponse'
+        "500":
+          description: Server error
   /title:
     get:
-      summary: "Find a single song by its title."
+      summary: "Find a single song by its title"
       description: "Search for a single song by its title."
       operationId: api_title
       parameters:
@@ -37,17 +39,19 @@ paths:
           required: false
           explode: true
           schema:
-            type: string
+            $ref: '#/components/schemas/SongTitle'
       responses:
-        200:
+        "200":
           description: Successful response
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/title'
+                $ref: "#/components/schemas/TitleResponse"
+        "500":
+          description: Server error
   /artist:
     get:
-      summary: "Get a list of songs by one artist."
+      summary: "Get a list of songs by one artist"
       description: "Filter songs by artist."
       operationId: api_artist
       parameters:
@@ -57,17 +61,19 @@ paths:
           required: false
           explode: true
           schema:
-            type: string
+            $ref: "#/components/schemas/ArtistResponse"
       responses:
-        200:
+        "200":
           description: Successful response
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/artist'
+                $ref: '#/components/schemas/ArtistResponse'
+        "500":
+          description: Server error
   /genre:
     get:
-      summary: "Get songs in the same genre."
+      summary: "Get songs in the same genre"
       description: "Filter songs by genre."
       operationId: api_genre
       parameters:
@@ -77,7 +83,7 @@ paths:
           required: false
           explode: true
           schema:
-            type: string
+            $ref: "#/components/schemas/GenreResponse"
             enum:
               - Pop
               - Folk
@@ -85,15 +91,17 @@ paths:
               - Classic Rock
             default: Country
       responses:
-        200:
+        "200":
           description: Successful response
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/genre'
+                $ref: '#/components/schemas/GenreResponse'
+        "500":
+          description: Server error
   /decade:
     get:
-      summary: "Get a list of songs from the same decade."
+      summary: "Get a list of songs from the same decade"
       description: "Filter songs by decade."
       operationId: api_decade
       parameters:
@@ -103,7 +111,7 @@ paths:
           required: false
           explode: true
           schema:
-            type: string
+            $ref: "#/components/schemas/DecadeResponse"
             enum:
               - 70s
               - 80s
@@ -111,113 +119,126 @@ paths:
               - 2000s
             default: 70s
       responses:
-        200:
+        "200":
           description: Successful response
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/decade'
+                $ref: '#/components/schemas/DecadeResponse'
+        "500":
+          description: Server error
 components:
   schemas:
-    all:
+    # ---------- Reusable primitive schemas ----------
+    SongTitle:
+      type: string
+      description: Title of song
+      example: Spooky
+
+    ArtistName:
+      type: string
+      description: Name of artist
+      example: Atlanta Rhythm Section
+
+    GenreName:
+      type: string
+      description: Genre of song
+      example: Classic Rock
+
+    Decade:
+      type: string
+      description: Decade when the song was released
+      example: 70s
+
+    Status:
+      type: string
+      description: |
+        Three possible statuses:
+
+        * `OK`: No errors occurred.
+        * `INVALID_REQUEST`: One or more parameters are missing or invalid.
+        * `UNKNOWN_ERROR`: The request could not be processed due to a server error. The request may succeed if you try again.
+      example: OK
+
+    # ---------- Reusable "results" object shapes ----------
+    Song:
+      type: object
+      properties:
+        title:
+          $ref: "#/components/schemas/SongTitle"
+        artist:
+          $ref: "#/components/schemas/ArtistName"
+        genre:
+          $ref: "#/components/schemas/GenreName"
+        decade:
+          $ref: "#/components/schemas/Decade"
+
+    TitleResult:
+      type: object
+      properties:
+        title:
+          $ref: "#/components/schemas/SongTitle"
+
+    ArtistResult:
+      type: object
+      properties:
+        artist:
+          $ref: "#/components/schemas/ArtistName"
+
+    GenreResult:
+      type: object
+      properties:
+        genre:
+          $ref: "#/components/schemas/GenreName"
+
+    DecadeResult:
+      type: object
+      properties:
+        decade:
+          $ref: "#/components/schemas/Decade"
+
+    # ---------- Response wrappers (what your endpoints return) ----------
+    AllResponse:
       title: Response
       type: object
       properties:
         results:
-          type: object
-          properties:
-            title:
-              type: string
-              description: title of song
-              example: 'Spooky'
-            artist:
-              type: string
-              description: name of artist
-              example: 'Atlanta Rhythm Section'
-            genre:
-              type: string
-              description: genre of song
-              example: 'Classic Rock'
-            decade:
-              type: string
-              description: decade the song was released
-              example: '70s'
+          $ref: "#/components/schemas/Song"
         status:
-          type: string
-          description: "Three possible statuses:\n
-            \n* `OK`: No errors occurred.
-            \n* `INVALID_REQUEST`: One or more parameters are missing or invalid.
-            \n* `UNKNOWN_ERROR`: The request could not be processed due to a server error. The request may succeed if you try again."
-          example: "OK"
-    title:
+          $ref: "#/components/schemas/Status"
+
+    TitleResponse:
       title: Response
       type: object
       properties:
         results:
-          type: object
-          properties:
-            title:
-              type: string
-              description: title of song
-              example: 'Spooky'
+          $ref: "#/components/schemas/TitleResult"
         status:
-          type: string
-          description: "Three possible statuses:\n
-            \n* `OK`: No errors occurred.
-            \n* `INVALID_REQUEST`: One or more parameters are missing or invalid.
-            \n* `UNKNOWN_ERROR`: The request could not be processed due to a server error. The request may succeed if you try again."
-          example: "OK"
-    artist:
+          $ref: "#/components/schemas/Status"
+
+    ArtistResponse:
       title: Response
       type: object
       properties:
         results:
-          type: object
-          properties:
-            artist:
-              type: string
-              description: name of artist
-              example: 'Atlanta Rhythm Section'
+          $ref: "#/components/schemas/ArtistResult"
         status:
-          type: string
-          description: "Three possible statuses:\n
-            \n* `OK`: No errors occurred.
-            \n* `INVALID_REQUEST`: One or more parameters are missing or invalid.
-            \n* `UNKNOWN_ERROR`: The request could not be processed due to a server error. The request may succeed if you try again."
-          example: "OK"
-    genre:
+          $ref: "#/components/schemas/Status"
+
+    GenreResponse:
       title: Response
       type: object
       properties:
         results:
-          type: object
-          properties:
-            genre:
-              type: string
-              description: genre of song
-              example: 'Classic Rock'
+          $ref: "#/components/schemas/GenreResult"
         status:
-          type: string
-          description: "Three possible statuses:\n
-            \n* `OK`: No errors occurred.
-            \n* `INVALID_REQUEST`: One or more parameters are missing or invalid.
-            \n* `UNKNOWN_ERROR`: The request could not be processed due to a server error. The request may succeed if you try again."
-          example: "OK"
-    decade:
+          $ref: "#/components/schemas/Status"
+
+    DecadeResponse:
       title: Response
       type: object
       properties:
         results:
-          type: object
-          properties:
-            genre:
-              type: string
-              description: decade when the song was released
-              example: '70s'
+          $ref: "#/components/schemas/DecadeResult"
         status:
-          type: string
-          description: "Three possible statuses:\n
-            \n* `OK`: No errors occurred.
-            \n* `INVALID_REQUEST`: One or more parameters are missing or invalid.
-            \n* `UNKNOWN_ERROR`: The request could not be processed due to a server error. The request may succeed if you try again."
-          example: "OK"
+          $ref: "#/components/schemas/Status"

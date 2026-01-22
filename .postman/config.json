@@ -1,0 +1,14 @@
+{
+  "workspace": {
+    "id": "bc26327e-75c7-4dda-8c7d-628632c68552"
+  },
+  "entities": {
+    "collections": [],
+    "environments": [],
+    "specs": [
+      "../SongbookAPI.yaml"
+    ],
+    "flows": [],
+    "globals": []
+  }
+}
