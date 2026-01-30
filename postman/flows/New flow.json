@@ -1,0 +1,103 @@
+{
+  "name": "New flow",
+  "description": "",
+  "flow": {
+    "description": "",
+    "nodes": {
+      "XWDS2i7d": {
+        "type": "ev/endpoint@3",
+        "pos": {
+          "x": 0,
+          "y": 0
+        },
+        "config": {
+          "inputs": [],
+          "data": "",
+          "language": "json",
+          "allowAnyType": false
+        },
+        "ui": {
+          "data": {
+            "triggerType": "ev/endpoint@3"
+          },
+          "namedInputsExpanded": true
+        }
+      },
+      "7m1ZgGI5": {
+        "type": "task/http-request@1",
+        "pos": {
+          "x": 320,
+          "y": -128
+        },
+        "config": {
+          "element": {
+            "id": "bc41867f-46c6-4c83-90f0-4a1adddb016b",
+            "collection": "3acadcde-34d1-44eb-b7d0-3ae813c883fd",
+            "name": "New Request",
+            "method": "GET"
+          },
+          "environment": null,
+          "parseBody": "auto",
+          "requestVariables": [],
+          "scriptsModifyEnvVars": true,
+          "trackGlobalEnvironment": true,
+          "requestVariables__expanded": true
+        },
+        "ui": {
+          "data": {},
+          "namedInputsExpanded": true
+        }
+      },
+      "ErjL2cXO": {
+        "type": "output/viewer@1",
+        "pos": {
+          "x": 680,
+          "y": -232
+        },
+        "size": {
+          "width": 328,
+          "height": 232
+        },
+        "config": {},
+        "ui": {
+          "data": {
+            "displayType": "auto"
+          }
+        }
+      }
+    },
+    "connections": {
+      "8IF_s69g": {
+        "source": "XWDS2i7d",
+        "target": "7m1ZgGI5",
+        "sourcePort": "data",
+        "targetPort": "AI"
+      },
+      "ZoCGHrR7": {
+        "source": "7m1ZgGI5",
+        "target": "ErjL2cXO",
+        "sourcePort": "success",
+        "targetPort": "data"
+      }
+    },
+    "annotations": {},
+    "groups": {},
+    "webhook": {
+      "payloadContent": "body-only",
+      "responseType": "default"
+    },
+    "forms": {},
+    "modules": {},
+    "io": {},
+    "ports": {},
+    "meta": {},
+    "scenes": {},
+    "scenarios": {},
+    "config": {
+      "definitions": {},
+      "constants": {}
+    }
+  },
+  "_postman_exported_at": "2026-01-30T21:39:07.421Z",
+  "_postman_exported_using": "Postman/Local Mode"
+}

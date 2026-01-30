@@ -1,0 +1,8 @@
+id: bc41867f-46c6-4c83-90f0-4a1adddb016b
+name: New Request
+url: www.postman-echo.com/get
+method: GET
+body:
+  type: text
+  content: ''
+type: http

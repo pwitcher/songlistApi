@@ -4,5 +4,30 @@
     "name": "New Collection",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
-  "item": []
+  "item": [
+    {
+      "name": "New Request",
+      "id": "bc41867f-46c6-4c83-90f0-4a1adddb016b",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": ""
+        },
+        "url": {
+          "raw": "www.postman-echo.com/get",
+          "host": [
+            "www",
+            "postman-echo",
+            "com"
+          ],
+          "path": [
+            "get"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
 }
