@@ -1,0 +1,142 @@
+openapi: 3.0.0
+info:
+  version: 2.2.0
+  title: Pete's Songbook API
+  description: |
+    A curated API for managing and exploring a live performance repertoire, enriched with multi-leveled musical metadata.
+
+    Performers and setlist managers can use this API to retrieve songs, filter by artist or title, and run advanced searches across musical attributes such as key, tempo, and genre — making it easy to build dynamic sets or automate live performance workflows.
+  contact:
+    name: Pete Witcher
+    email: pete.witcher@gmail.com
+
+servers:
+  - url: https://intense-garden-21213.herokuapp.com/api/v1/resources/songs
+    description: Production server — the live, publicly accessible deployment of the Songbook API.
+
+tags:
+  - name: Repertoire Retrieval
+    description: "Endpoints for fetching the full song catalogue or looking up individual songs by title or artist."
+  - name: Search & Filtering
+    description: "Advanced search tools for discovering songs by musical attributes such as genre, key, and tempo — ideal for setlist planning and live performance orchestration."
+
+paths:
+  /all:
+    get:
+      tags: [Repertoire Retrieval]
+      summary: "Get all songs"
+      description: "Returns the complete list of songs in the repertoire. Use this endpoint to retrieve the full catalogue without any filtering applied."
+      operationId: getAllSongs
+      responses:
+        '200':
+          description: "A JSON array containing all songs in the repertoire, each with full metadata."
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/songResponse'
+
+  /title:
+    get:
+      tags: [Repertoire Retrieval]
+      summary: "Find a song by title"
+      description: "Search the repertoire for a song that matches the provided title. Returns a single matching song object if found."
+      operationId: getSongByTitle
+      parameters:
+        - name: title
+          in: query
+          description: "The exact or partial title of the song to search for. Case-insensitive matching is applied."
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: "A single song object matching the provided title, including all associated metadata."
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/songResponse'
+
+  /artist:
+    get:
+      tags: [Repertoire Retrieval]
+      summary: "Filter by artist"
+      description: "Retrieve all songs in the repertoire associated with a specific artist. Useful for building artist-focused setlists."
+      operationId: getSongsByArtist
+      parameters:
+        - name: artist
+          in: query
+          description: "The name of the artist to filter songs by. Returns all songs attributed to this artist."
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: "A JSON array of songs by the specified artist, each with full metadata."
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/songResponse'
+
+  /search:
+    get:
+      tags: [Search & Filtering]
+      summary: "Advanced metadata search"
+      description: "Search the songbook using one or more musical metadata parameters. All provided parameters are combined additively (AND logic), allowing precise filtering by genre, musical key, and tempo."
+      operationId: searchSongs
+      parameters:
+        - name: genre
+          in: query
+          description: "Filter songs by musical genre (e.g. rock, jazz, pop). Returns only songs matching the specified genre."
+          schema:
+            type: string
+        - name: key
+          in: query
+          description: "Filter songs by musical key (e.g. C major, A minor). Useful for matching songs to a consistent tonal centre in a set."
+          schema:
+            type: string
+        - name: tempo
+          in: query
+          description: "Filter songs by their general tempo or energy level. Accepted values are slow, medium, or fast."
+          schema:
+            type: string
+            enum: [slow, medium, fast]
+      responses:
+        '200':
+          description: "A JSON array of songs matching all provided filter criteria, each with full metadata."
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/songResponse'
+
+components:
+  schemas:
+    songResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        artist:
+          type: string
+        decade:
+          type: string
+        genre:
+          type: string
+        musical_metadata:
+          type: object
+          description: "A collection of performance-specific musical attributes that describe how the song is played live, including key and tempo."
+          properties:
+            key:
+              type: string
+              description: "The musical key in which the song is performed (e.g. G major, E minor). Useful for transposition and harmonic planning."
+            tempo:
+              type: string
+              description: "The general tempo or energy feel of the performance. One of: slow, medium, or fast."
+              enum: [slow, medium, fast]
