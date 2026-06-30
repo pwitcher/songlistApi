@@ -87,6 +87,19 @@ def api_title():
 def page_not_found(e):
     return jsonify({"error": "No results match your request."}), 404
 
+@app.route('/api/v1/resources/songs/artist', methods=['GET'])
+def api_artist():
+    artist = request.args.get('artist')
+    if not artist:
+        return page_not_found(404)
+    
+    # Query the database for matches matching the artist column
+    results = get_db_results("SELECT * FROM songlist WHERE artist=?;", (artist,))
+    
+    if not results:
+        return page_not_found(404)
+    return jsonify(results)
+        
 if __name__ == "__main__":
     app.config["DEBUG"] = True
     app.run()
